@@ -1,4 +1,4 @@
-package com.anthony.backend.infrastructure.persistence;
+package com.anthony.backend.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
