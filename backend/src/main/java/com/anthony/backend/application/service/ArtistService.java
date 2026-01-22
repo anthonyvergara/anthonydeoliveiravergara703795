@@ -46,7 +46,7 @@ public class ArtistService {
                 .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
     }
 
-    public Page<Artist> findAll(String name, String albumTitle, Pageable pageable) {
+    public Page<Artist> findAll(String name, String albumTitle, boolean includeAlbums, Pageable pageable) {
         Specification<ArtistEntity> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class ArtistService {
         };
 
         return artistJpaRepository.findAll(spec, pageable)
-                .map(artistMapper::toDomainWithAlbums);
+                .map(entity -> includeAlbums ? artistMapper.toDomainWithAlbums(entity) : artistMapper.toDomain(entity));
     }
 
     @Transactional

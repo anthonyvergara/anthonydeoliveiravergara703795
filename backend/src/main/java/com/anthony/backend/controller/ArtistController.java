@@ -68,6 +68,7 @@ public class ArtistController {
     public ResponseEntity<Page<ArtistResponseDTO>> findAll(
             @Parameter(description = "Filtro por nome do artista") @RequestParam(required = false) String name,
             @Parameter(description = "Filtro por título do álbum") @RequestParam(required = false) String albumTitle,
+            @Parameter(description = "Incluir álbuns na resposta") @RequestParam(required = false, defaultValue = "false") boolean albums,
             @Parameter(description = "Número da página (inicia em 0)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Quantidade de itens por página") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Campo para ordenação (ex: name, id)") @RequestParam(defaultValue = "id") String sortBy,
@@ -76,7 +77,7 @@ public class ArtistController {
         Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
 
-        Page<Artist> artists = artistService.findAll(name, albumTitle, pageable);
+        Page<Artist> artists = artistService.findAll(name, albumTitle, albums, pageable);
         return ResponseEntity.ok(artists.map(artistMapper::toResponseDTO));
     }
 

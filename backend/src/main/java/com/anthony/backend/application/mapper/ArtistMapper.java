@@ -24,3 +24,12 @@ public interface ArtistMapper {
 
     AlbumSummaryDTO toAlbumSummaryDTO(Album album);
 }
+
+
+
+
+
+
+
+
+
