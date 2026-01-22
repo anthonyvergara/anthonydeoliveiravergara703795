@@ -22,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/artist")
+@RequestMapping("/api/v1/artist")
 @Tag(name = "Artistas", description = "API para gerenciamento de artistas")
 public class ArtistController {
 

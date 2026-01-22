@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/album")
+@RequestMapping("/api/v1/album")
 @Tag(name = "Álbuns", description = "API para gerenciamento de álbuns")
 public class AlbumController {
 
