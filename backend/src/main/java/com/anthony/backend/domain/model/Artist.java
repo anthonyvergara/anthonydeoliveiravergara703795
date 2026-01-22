@@ -19,6 +19,12 @@ public class Artist {
     private List<Album> albums = new ArrayList<>();
 
     public void addAlbum(Album album) {
+        boolean exists = albums.stream()
+                .anyMatch(a -> a.getTitle().equalsIgnoreCase(album.getTitle()));
+
+        if (exists) {
+            throw new RuntimeException("Artista já tem um álbum com este título");
+        }
         albums.add(album);
         album.setArtist(this);
     }

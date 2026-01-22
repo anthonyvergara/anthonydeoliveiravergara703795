@@ -44,8 +44,9 @@ public class AlbumService {
 
         Album album = Album.builder()
                 .title(title)
-                .artist(artist)
                 .build();
+
+        artist.addAlbum(album);
 
         return albumRepository.save(album);
     }
@@ -86,20 +87,33 @@ public class AlbumService {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
 
-        Artist artist = artistRepository.findById(artistId)
+        Artist oldArtist = album.getArtist();
+        Artist newArtist = artistRepository.findById(artistId)
                 .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
 
+        if (oldArtist != null && !oldArtist.getId().equals(newArtist.getId())) {
+            oldArtist.removeAlbum(album);
+        }
+
         album.setTitle(title);
-        album.setArtist(artist);
+
+        if (oldArtist == null || !oldArtist.getId().equals(newArtist.getId())) {
+            newArtist.addAlbum(album);
+        }
 
         return albumRepository.save(album);
     }
 
     @Transactional
     public void delete(Long id) {
-        if (!albumRepository.existsById(id)) {
-            throw new RuntimeException("Álbum não encontrado");
+        Album album = albumRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
+
+        Artist artist = album.getArtist();
+        if (artist != null) {
+            artist.removeAlbum(album);
         }
+
         albumRepository.deleteById(id);
     }
 }
