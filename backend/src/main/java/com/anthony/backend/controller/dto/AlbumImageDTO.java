@@ -21,5 +21,7 @@ public class AlbumImageDTO {
 
     @Schema(description = "URL do arquivo", example = "https://example.com/images/cover.jpg")
     private String fileUrl;
-}
 
+    @Schema(description = "Indica se é a imagem padrão", example = "true")
+    private Boolean isDefault;
+}

@@ -22,8 +22,10 @@ public class AlbumImageEntity {
     @Column(name = "file_url", nullable = false, columnDefinition = "TEXT")
     private String fileUrl;
 
+    @Column(name = "is_default", nullable = false)
+    private Boolean isDefault;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)
     private AlbumEntity album;
 }
-
