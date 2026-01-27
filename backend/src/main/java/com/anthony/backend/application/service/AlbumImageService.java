@@ -39,20 +39,18 @@ public class AlbumImageService {
         for (int i = 0; i < files.length; i++) {
             MultipartFile file = files[i];
 
-            String fileName = minioStorageService.uploadFile(file, albumId);
+            String fileKey = minioStorageService.uploadFile(file, albumId);
 
             boolean isDefault = Boolean.TRUE.equals(setAsDefault) && i == 0;
 
             AlbumImage albumImage = AlbumImage.builder()
-                    .fileName(fileName)
-                    .fileUrl(fileName) // Armazena o nome do arquivo, a URL será gerada dinamicamente
+                    .fileKey(fileKey)
                     .isDefault(isDefault)
                     .album(album)
                     .build();
 
             AlbumImage savedImage = albumImageRepository.save(albumImage);
-
-            String presignedUrl = minioStorageService.getPresignedUrl(savedImage.getFileName());
+            String presignedUrl = minioStorageService.getPresignedUrl(savedImage.getFileKey());
             savedImage.setFileUrl(presignedUrl);
 
             uploadedImages.add(savedImage);
@@ -65,7 +63,7 @@ public class AlbumImageService {
         List<AlbumImage> images = albumImageRepository.findByAlbumId(albumId);
 
         images.forEach(image -> {
-            String presignedUrl = minioStorageService.getPresignedUrl(image.getFileName());
+            String presignedUrl = minioStorageService.getPresignedUrl(image.getFileKey());
             image.setFileUrl(presignedUrl);
         });
 
@@ -76,7 +74,7 @@ public class AlbumImageService {
         AlbumImage image = albumImageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
 
-        String presignedUrl = minioStorageService.getPresignedUrl(image.getFileName());
+        String presignedUrl = minioStorageService.getPresignedUrl(image.getFileKey());
         image.setFileUrl(presignedUrl);
 
         return image;
@@ -87,7 +85,7 @@ public class AlbumImageService {
         AlbumImage image = albumImageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
 
-        minioStorageService.deleteFile(image.getFileName());
+        minioStorageService.deleteFile(image.getFileKey());
 
         albumImageRepository.deleteById(id);
     }
@@ -110,7 +108,7 @@ public class AlbumImageService {
         image.setIsDefault(true);
         AlbumImage savedImage = albumImageRepository.save(image);
 
-        String presignedUrl = minioStorageService.getPresignedUrl(savedImage.getFileName());
+        String presignedUrl = minioStorageService.getPresignedUrl(savedImage.getFileKey());
         savedImage.setFileUrl(presignedUrl);
 
         return savedImage;

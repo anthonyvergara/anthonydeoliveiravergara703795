@@ -16,10 +16,10 @@ public class AlbumImageDTO {
     @Schema(description = "ID da imagem", example = "1")
     private Long id;
 
-    @Schema(description = "Nome do arquivo", example = "cover.jpg")
-    private String fileName;
+    @Schema(description = "Chave do arquivo no storage", example = "albums/1/cover.jpg")
+    private String fileKey;
 
-    @Schema(description = "URL do arquivo", example = "https://example.com/images/cover.jpg")
+    @Schema(description = "URL pré-assinada do arquivo", example = "https://minio.example.com/...")
     private String fileUrl;
 
     @Schema(description = "Indica se é a imagem padrão", example = "true")

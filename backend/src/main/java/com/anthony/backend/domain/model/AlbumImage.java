@@ -10,7 +10,7 @@ import lombok.*;
 public class AlbumImage {
 
     private Long id;
-    private String fileName;
+    private String fileKey;
     private String fileUrl;
     private Boolean isDefault;
     private Album album;

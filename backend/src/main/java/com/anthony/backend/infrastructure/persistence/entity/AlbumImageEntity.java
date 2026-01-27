@@ -16,11 +16,8 @@ public class AlbumImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_name", nullable = false, length = 255)
-    private String fileName;
-
-    @Column(name = "file_url", nullable = false, columnDefinition = "TEXT")
-    private String fileUrl;
+    @Column(name = "file_key", nullable = false, length = 255)
+    private String fileKey;
 
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault;
