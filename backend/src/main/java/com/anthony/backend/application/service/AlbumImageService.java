@@ -21,7 +21,6 @@ public class AlbumImageService {
     private final AlbumImageRepository albumImageRepository;
     private final AlbumService albumService;
     private final MinioStorageService minioStorageService;
-    private final AlbumImageMapper albumImageMapper;
 
     @Transactional
     public List<AlbumImage> uploadImages(Long albumId, MultipartFile[] files, Boolean setAsDefault) {
@@ -29,11 +28,7 @@ public class AlbumImageService {
         List<AlbumImage> uploadedImages = new ArrayList<>();
 
         if (Boolean.TRUE.equals(setAsDefault)) {
-            List<AlbumImage> existingImages = albumImageRepository.findByAlbumId(albumId);
-            existingImages.forEach(img -> {
-                img.setIsDefault(false);
-                albumImageRepository.save(img);
-            });
+            albumImageRepository.updateIsDefaultByAlbumId(albumId, false);
         }
 
         for (int i = 0; i < files.length; i++) {
@@ -92,11 +87,7 @@ public class AlbumImageService {
 
     @Transactional
     public AlbumImage setAsDefault(Long albumId, Long imageId) {
-        List<AlbumImage> images = albumImageRepository.findByAlbumId(albumId);
-        images.forEach(img -> {
-            img.setIsDefault(false);
-            albumImageRepository.save(img);
-        });
+        albumImageRepository.updateIsDefaultByAlbumId(albumId, false);
 
         AlbumImage image = albumImageRepository.findById(imageId)
                 .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));

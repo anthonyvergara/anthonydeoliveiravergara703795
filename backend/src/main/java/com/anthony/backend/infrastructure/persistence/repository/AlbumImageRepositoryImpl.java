@@ -55,5 +55,12 @@ public class AlbumImageRepositoryImpl implements AlbumImageRepository {
     public boolean existsById(Long id) {
         return albumImageJpaRepository.existsById(id);
     }
-}
 
+    @Override
+    public void updateIsDefaultByAlbumId(Long albumId, boolean isDefault) {
+        albumImageJpaRepository.findByAlbumId(albumId).forEach(entity -> {
+            entity.setIsDefault(isDefault);
+            albumImageJpaRepository.save(entity);
+        });
+    }
+}

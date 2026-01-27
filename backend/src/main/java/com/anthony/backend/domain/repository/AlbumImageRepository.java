@@ -18,5 +18,6 @@ public interface AlbumImageRepository {
     void deleteById(Long id);
 
     boolean existsById(Long id);
-}
 
+    void updateIsDefaultByAlbumId(Long albumId, boolean isDefault);
+}
