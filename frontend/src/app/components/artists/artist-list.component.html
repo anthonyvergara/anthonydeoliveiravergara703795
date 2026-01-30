@@ -2,7 +2,7 @@
   <div class="header">
     <div>
       <h1 class="title">Artistas</h1>
-      <p class="subtitle">Descubra seus artistas favoritos</p>
+      <p class="subtitle">Descubra e explore seus artistas favoritos</p>
     </div>
   </div>
 
@@ -13,10 +13,10 @@
       </svg>
       <input
         type="text"
-        placeholder="Buscar"
+        placeholder="Buscar artista por nome ou gênero..."
         class="search-input"
         [(ngModel)]="searchTerm"
-        >
+        (ngModelChange)="onSearchChange()">
       <span *ngIf="searchTerm()" class="results-count">
         {{ filteredArtists().length }} {{ filteredArtists().length === 1 ? 'resultado' : 'resultados' }}
       </span>
@@ -47,6 +47,7 @@
           <svg class="stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
+          <span>{{ formatFollowers(artist.followers) }} seguidores</span>
         </div>
       </div>
     </div>
@@ -62,6 +63,7 @@
 
   <div *ngIf="totalPages() > 1" class="pagination">
     <button
+      (click)="previousPage()"
       [disabled]="currentPage() === 1"
       class="pagination-button"
       [class.disabled]="currentPage() === 1">
@@ -74,6 +76,7 @@
     <div class="pagination-numbers">
       <button
         *ngFor="let page of pageNumbers()"
+        (click)="goToPage(page)"
         [disabled]="page === '...'"
         class="pagination-number"
         [class.active]="page === currentPage()"
@@ -83,6 +86,7 @@
     </div>
 
     <button
+      (click)="nextPage()"
       [disabled]="currentPage() === totalPages()"
       class="pagination-button"
       [class.disabled]="currentPage() === totalPages()">

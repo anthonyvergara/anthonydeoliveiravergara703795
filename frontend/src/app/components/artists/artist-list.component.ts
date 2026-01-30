@@ -105,6 +105,35 @@ export class ArtistListComponent {
     return pages;
   });
 
+  goToPage(page: number | string) {
+    if (typeof page === 'number') {
+      this.currentPage.set(Math.max(1, Math.min(page, this.totalPages())));
+    }
+  }
 
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+    }
+  }
+
+  formatFollowers(followers: number): string {
+    if (followers >= 1000000) {
+      return (followers / 1000000).toFixed(1) + 'M';
+    } else if (followers >= 1000) {
+      return (followers / 1000).toFixed(1) + 'K';
+    }
+    return followers.toString();
+  }
+
+  onSearchChange() {
+    this.currentPage.set(1);
+  }
 }
 
