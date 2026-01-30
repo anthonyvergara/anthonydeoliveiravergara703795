@@ -22,6 +22,7 @@ export class ArtistListComponent {
   searchTerm = signal('');
   currentPage = signal(1);
   itemsPerPage = 12;
+  Math = Math; // Expor Math para uso no template
 
   // Mock data de artistas
   mockArtists: Artist[] = [
@@ -59,6 +60,49 @@ export class ArtistListComponent {
       artist.name.toLowerCase().includes(term) ||
       artist.genre.toLowerCase().includes(term)
     );
+  });
+
+  totalPages = computed(() => {
+    return Math.ceil(this.filteredArtists().length / this.itemsPerPage);
+  });
+
+  paginatedArtists = computed(() => {
+    const start = (this.currentPage() - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredArtists().slice(start, end);
+  });
+
+  pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const pages: (number | string)[] = [];
+
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+
+      if (current > 3) {
+        pages.push('...');
+      }
+
+      const start = Math.max(2, current - 1);
+      const end = Math.min(total - 1, current + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (current < total - 2) {
+        pages.push('...');
+      }
+
+      pages.push(total);
+    }
+
+    return pages;
   });
 
 
