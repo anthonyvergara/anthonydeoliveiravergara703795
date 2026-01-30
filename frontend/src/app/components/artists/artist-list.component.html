@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="header">
+    <div>
+      <h1 class="title">Artistas</h1>
+      <p class="subtitle">Descubra seus artistas favoritos</p>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <div class="search-wrapper">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Buscar"
+        class="search-input"
+        [(ngModel)]="searchTerm"
+        >
+      <span *ngIf="searchTerm()" class="results-count">
+        {{ filteredArtists().length }} {{ filteredArtists().length === 1 ? 'resultado' : 'resultados' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="artists-grid">
+    <div *ngFor="let artist of paginatedArtists()" class="artist-card">
+      <div class="artist-image-wrapper">
+        <img [src]="artist.imageUrl" [alt]="artist.name" class="artist-image">
+        <div class="artist-overlay">
+          <button class="play-button">
+            <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="artist-info">
+        <div class="artist-header">
+          <h3 class="artist-name">{{ artist.name }}</h3>
+          <svg *ngIf="artist.verified" class="verified-badge" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <p class="artist-genre">{{ artist.genre }}</p>
+        <div class="artist-stats">
+          <svg class="stats-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="paginatedArtists().length === 0" class="empty-state">
+    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <h3 class="empty-title">Nenhum artista encontrado</h3>
+    <p class="empty-description">Tente ajustar sua busca ou filtros</p>
+  </div>
+
+  <div *ngIf="totalPages() > 1" class="pagination">
+    <button
+      [disabled]="currentPage() === 1"
+      class="pagination-button"
+      [class.disabled]="currentPage() === 1">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Anterior
+    </button>
+
+    <div class="pagination-numbers">
+      <button
+        *ngFor="let page of pageNumbers()"
+        [disabled]="page === '...'"
+        class="pagination-number"
+        [class.active]="page === currentPage()"
+        [class.ellipsis]="page === '...'">
+        {{ page }}
+      </button>
+    </div>
+
+    <button
+      [disabled]="currentPage() === totalPages()"
+      class="pagination-button"
+      [class.disabled]="currentPage() === totalPages()">
+      Próxima
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="info-footer">
+    <p>
+      Mostrando {{ (currentPage() - 1) * itemsPerPage + 1 }} -
+      {{ Math.min(currentPage() * itemsPerPage, filteredArtists().length) }}
+      de {{ filteredArtists().length }} artistas
+    </p>
+  </div>
+</div>
+
+
+
