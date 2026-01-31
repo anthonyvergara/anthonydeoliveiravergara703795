@@ -1,0 +1,190 @@
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+.header {
+  @apply mb-8;
+
+  .title {
+    @apply text-3xl font-bold text-gray-900 mb-2;
+  }
+
+  .subtitle {
+    @apply text-gray-600 text-lg;
+  }
+}
+
+.search-section {
+  @apply mb-8;
+
+  .search-wrapper {
+    @apply relative max-w-2xl;
+
+    .search-icon {
+      @apply absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400;
+    }
+
+    .search-input {
+      @apply w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl
+             focus:ring-2 focus:ring-blue-500 focus:border-transparent
+             transition-all duration-200 text-base;
+
+      &:focus {
+        @apply shadow-lg;
+      }
+    }
+
+    .results-count {
+      @apply absolute right-4 top-1/2 transform -translate-y-1/2
+             text-sm text-gray-500 font-medium;
+    }
+  }
+}
+
+.artists-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8;
+}
+
+.artist-card {
+  @apply bg-white rounded-2xl shadow-sm border border-gray-200
+         overflow-hidden transition-all duration-300 hover:shadow-xl
+         hover:-translate-y-1 cursor-pointer;
+
+  .artist-image-wrapper {
+    @apply relative aspect-square overflow-hidden bg-gradient-to-br from-purple-400 to-pink-400;
+
+    .artist-image {
+      @apply w-full h-full object-cover transition-transform duration-500;
+    }
+
+    .artist-overlay {
+      @apply absolute inset-0 bg-black bg-opacity-0
+             flex items-center justify-center
+             transition-all duration-300 opacity-0;
+
+      .play-button {
+        @apply bg-blue-600 text-white rounded-full p-4
+               transform scale-75 transition-all duration-300
+               hover:bg-blue-700 hover:scale-90;
+      }
+    }
+
+    &:hover {
+      .artist-image {
+        @apply scale-110;
+      }
+
+      .artist-overlay {
+        @apply bg-opacity-40 opacity-100;
+      }
+    }
+  }
+
+  .artist-info {
+    @apply p-5;
+
+    .artist-header {
+      @apply flex items-center justify-between mb-1;
+
+      .artist-name {
+        @apply text-lg font-bold text-gray-900 truncate flex-1;
+      }
+
+      .verified-badge {
+        @apply h-5 w-5 text-blue-500 ml-2 flex-shrink-0;
+      }
+    }
+
+    .artist-genre {
+      @apply text-sm text-gray-500 mb-3;
+    }
+
+    .artist-stats {
+      @apply flex items-center text-sm text-gray-600;
+
+      .stats-icon {
+        @apply h-4 w-4 mr-1.5 text-gray-400;
+      }
+    }
+  }
+}
+
+.empty-state {
+  @apply text-center py-16;
+
+  .empty-icon {
+    @apply h-16 w-16 text-gray-300 mx-auto mb-4;
+  }
+
+  .empty-title {
+    @apply text-xl font-semibold text-gray-900 mb-2;
+  }
+
+  .empty-description {
+    @apply text-gray-500;
+  }
+}
+
+.pagination {
+  @apply flex items-center justify-center space-x-2 mb-6;
+
+  .pagination-button {
+    @apply flex items-center space-x-2 px-4 py-2 bg-white border-2 border-gray-200
+           rounded-lg font-medium text-gray-700 hover:bg-gray-50
+           transition-all duration-200 hover:border-blue-500 hover:text-blue-600;
+
+    &.disabled {
+      @apply opacity-50 cursor-not-allowed hover:bg-white hover:border-gray-200 hover:text-gray-700;
+    }
+  }
+
+  .pagination-numbers {
+    @apply flex items-center space-x-1;
+
+    .pagination-number {
+      @apply w-10 h-10 flex items-center justify-center rounded-lg
+             font-medium text-gray-700 hover:bg-gray-100
+             transition-all duration-200;
+
+      &.active {
+        @apply bg-blue-600 text-white hover:bg-blue-700;
+      }
+
+      &.ellipsis {
+        @apply cursor-default hover:bg-transparent;
+      }
+    }
+  }
+}
+
+.info-footer {
+  @apply text-center text-sm text-gray-600 font-medium;
+}
+
+@media (max-width: 640px) {
+  .header {
+    .title {
+      @apply text-2xl;
+    }
+
+    .subtitle {
+      @apply text-base;
+    }
+  }
+
+  .pagination {
+    @apply flex-wrap;
+
+    .pagination-button {
+      @apply text-sm px-3 py-2;
+    }
+
+    .pagination-numbers {
+      .pagination-number {
+        @apply w-8 h-8 text-sm;
+      }
+    }
+  }
+}
+
+
