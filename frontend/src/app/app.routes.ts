@@ -8,11 +8,11 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./features/dashboard/pages/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'artists',
-    loadComponent: () => import('./components/artists/artist-list.component').then(m => m.ArtistListComponent)
+    loadComponent: () => import('./features/artists/pages/artist-list/artist-list.component').then(m => m.ArtistListComponent)
   },
   {
     path: '**',

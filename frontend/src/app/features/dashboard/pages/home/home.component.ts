@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +9,6 @@ import { DataService } from '../../services/data.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  dataService = inject(DataService);
+  // TODO: Implementar futuramente
 }
 

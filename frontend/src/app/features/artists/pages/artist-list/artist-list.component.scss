@@ -125,6 +125,25 @@
   }
 }
 
+.loading-state {
+  @apply text-center py-16;
+
+  .spinner {
+    @apply mx-auto mb-4 w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    @apply text-gray-600 font-medium;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .pagination {
   @apply flex items-center justify-center space-x-2 mb-6;
 
