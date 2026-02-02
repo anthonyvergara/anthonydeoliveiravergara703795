@@ -4,7 +4,6 @@ import { Artist } from '../models/artist.model';
 
 export interface ArtistStateData {
   artists: Artist[];
-  selectedArtist: Artist | null;
   total: number;
   currentPage: number;
   pageSize: number;
@@ -15,7 +14,6 @@ export interface ArtistStateData {
 
 const initialState: ArtistStateData = {
   artists: [],
-  selectedArtist: null,
   total: 0,
   currentPage: 1,
   pageSize: 12,
@@ -31,7 +29,6 @@ export class ArtistState {
   private readonly state$ = new BehaviorSubject<ArtistStateData>(initialState);
 
   readonly artists$: Observable<Artist[]> = new BehaviorSubject<Artist[]>([]);
-  readonly selectedArtist$: Observable<Artist | null> = new BehaviorSubject<Artist | null>(null);
   readonly total$: Observable<number> = new BehaviorSubject<number>(0);
   readonly currentPage$: Observable<number> = new BehaviorSubject<number>(1);
   readonly pageSize$: Observable<number> = new BehaviorSubject<number>(12);
@@ -42,7 +39,6 @@ export class ArtistState {
   constructor() {
     this.state$.subscribe(state => {
       (this.artists$ as BehaviorSubject<Artist[]>).next(state.artists);
-      (this.selectedArtist$ as BehaviorSubject<Artist | null>).next(state.selectedArtist);
       (this.total$ as BehaviorSubject<number>).next(state.total);
       (this.currentPage$ as BehaviorSubject<number>).next(state.currentPage);
       (this.pageSize$ as BehaviorSubject<number>).next(state.pageSize);
