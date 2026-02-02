@@ -4,6 +4,7 @@ import com.anthony.backend.application.mapper.ArtistMapper;
 import com.anthony.backend.application.service.ArtistService;
 import com.anthony.backend.controller.dto.ArtistRequestDTO;
 import com.anthony.backend.controller.dto.ArtistResponseDTO;
+import com.anthony.backend.controller.dto.PageResponseDTO;
 import com.anthony.backend.domain.model.Artist;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,7 +66,7 @@ public class ArtistController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de artistas retornada com sucesso")
     })
-    public ResponseEntity<Page<ArtistResponseDTO>> findAll(
+    public ResponseEntity<PageResponseDTO<ArtistResponseDTO>> findAll(
             @Parameter(description = "Filtro por nome do artista") @RequestParam(required = false) String name,
             @Parameter(description = "Filtro por título do álbum") @RequestParam(required = false) String albumTitle,
             @Parameter(description = "Incluir álbuns na resposta") @RequestParam(required = false, defaultValue = "false") boolean albums,
@@ -78,7 +79,8 @@ public class ArtistController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
 
         Page<Artist> artists = artistService.findAll(name, albumTitle, albums, pageable);
-        return ResponseEntity.ok(artists.map(artistMapper::toResponseDTO));
+        Page<ArtistResponseDTO> responsePage = artists.map(artistMapper::toResponseDTO);
+        return ResponseEntity.ok(PageResponseDTO.from(responsePage));
     }
 
     @PutMapping("/{id}")
