@@ -6,11 +6,13 @@
   @apply mb-8;
 
   .title {
-    @apply text-3xl font-bold text-gray-900 mb-2;
+    @apply text-3xl font-bold mb-2;
+    color: #ffffff;
   }
 
   .subtitle {
-    @apply text-gray-600 text-lg;
+    @apply text-lg;
+    color: #d1d5db;
   }
 }
 
@@ -177,7 +179,8 @@
 }
 
 .info-footer {
-  @apply text-center text-sm text-gray-600 font-medium;
+  @apply text-center text-sm font-medium;
+  color: #d1d5db;
 }
 
 @media (max-width: 640px) {
