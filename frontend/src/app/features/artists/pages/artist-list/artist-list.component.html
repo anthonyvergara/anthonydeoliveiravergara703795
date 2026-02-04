@@ -29,7 +29,10 @@
   </div>
 
   <div *ngIf="!(loading$ | async)" class="artists-grid">
-    <div *ngFor="let artist of (artists$ | async)" class="artist-card">
+    <div
+      *ngFor="let artist of (artists$ | async)"
+      class="artist-card"
+      (click)="viewArtistDetail(artist.id)">
       <div class="artist-image-wrapper">
         <img [src]="artist.imageUrl" [alt]="artist.name" class="artist-image">
         <div class="artist-overlay">

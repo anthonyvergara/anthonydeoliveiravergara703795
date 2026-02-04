@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ArtistFacade } from '../../facade/artist.facade';
 import { Artist } from '../../models/artist.model';
@@ -25,7 +26,10 @@ export class ArtistListComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;
   error$!: Observable<string | null>;
 
-  constructor(private artistFacade: ArtistFacade) {
+  constructor(
+    private artistFacade: ArtistFacade,
+    private router: Router
+  ) {
     this.artists$ = this.artistFacade.artists$;
     this.loading$ = this.artistFacade.loading$;
     this.error$ = this.artistFacade.error$;
@@ -112,6 +116,10 @@ export class ArtistListComponent implements OnInit, OnDestroy {
 
   getEndIndex(): number {
     return Math.min(this.currentPage() * this.itemsPerPage, this.totalArtists());
+  }
+
+  viewArtistDetail(artistId: number): void {
+    this.router.navigate(['/artists', artistId]);
   }
 }
 
