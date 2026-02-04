@@ -1,16 +1,17 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, ChildrenOutletContexts } from '@angular/router';
+import { routeAnimations } from './shared/animations/route-animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet],
   templateUrl: './app.html',
-  styleUrls: ['./app.scss']
+  styleUrls: ['./app.scss'],
+  animations: [routeAnimations]
 })
 export class AppComponent {
-  sidebarOpen = signal(false); // Sempre em modo collapse
   activeSection = signal('home');
 
   menuItems = [
@@ -18,11 +19,10 @@ export class AppComponent {
     { id: 'artists', label: 'Artistas', icon: 'clipboard-check', route: '/artists' },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private contexts: ChildrenOutletContexts) {}
 
-  toggleSidebar() {
-    // Mantém sempre em modo collapse
-    // this.sidebarOpen.set(!this.sidebarOpen());
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'];
   }
 
   setActiveSection(sectionId: string) {
