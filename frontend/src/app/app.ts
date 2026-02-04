@@ -10,7 +10,7 @@ import { RouterOutlet, Router } from '@angular/router';
   styleUrls: ['./app.scss']
 })
 export class AppComponent {
-  sidebarOpen = signal(true);
+  sidebarOpen = signal(false); // Sempre em modo collapse
   activeSection = signal('home');
 
   menuItems = [
@@ -21,7 +21,8 @@ export class AppComponent {
   constructor(private router: Router) {}
 
   toggleSidebar() {
-    this.sidebarOpen.set(!this.sidebarOpen());
+    // Mantém sempre em modo collapse
+    // this.sidebarOpen.set(!this.sidebarOpen());
   }
 
   setActiveSection(sectionId: string) {
