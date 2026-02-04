@@ -1,0 +1,149 @@
+<div class="artist-detail-container">
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Carregando informações do artista...</p>
+  </div>
+
+  <div *ngIf="!loading && artist" class="artist-detail-content">
+    <div class="header-section">
+      <button class="back-button" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        Voltar
+      </button>
+      <h1 class="artist-name">{{ artist.name }}</h1>
+    </div>
+
+    <div class="artist-info-card">
+      <div class="artist-image">
+        <img [src]="artist.imageUrl" [alt]="artist.name" />
+      </div>
+      <div class="artist-details">
+        <h2>Informações do Artista</h2>
+        <div class="info-item">
+          <span class="label">Nome:</span>
+          <span class="value">{{ artist.name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Total de Álbuns:</span>
+          <span class="value">{{ albumsTotal }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="albums-section">
+      <h2 class="section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
+        </svg>
+        Álbuns
+      </h2>
+
+      <div *ngIf="albumsLoading" class="albums-loading">
+        <div class="loading-spinner-small"></div>
+        <p>Carregando álbuns...</p>
+      </div>
+
+      <div *ngIf="!albumsLoading && albums.length === 0" class="no-albums-message">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+        </svg>
+        <h3>Nenhum álbum encontrado</h3>
+        <p>Este artista ainda não possui álbuns cadastrados.</p>
+      </div>
+
+      <div *ngIf="!albumsLoading && albums.length > 0" class="albums-grid">
+        <div *ngFor="let album of albums" class="album-card">
+          <div class="album-cover">
+            <img
+              *ngIf="getDefaultImage(album)"
+              [src]="getDefaultImage(album)"
+              [alt]="album.title"
+              class="cover-image"
+            />
+            <div *ngIf="!getDefaultImage(album)" class="no-cover">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
+              </svg>
+              <span>Sem capa</span>
+            </div>
+
+            <div *ngIf="hasImages(album)" class="image-count-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              {{ album.images.length }}
+            </div>
+          </div>
+
+          <div class="album-info">
+            <h3 class="album-title" [title]="album.title">{{ album.title }}</h3>
+            <p class="album-artist">{{ album.artistName }}</p>
+
+            <button
+              *ngIf="hasImages(album)"
+              class="view-images-btn"
+              (click)="viewAllImages(album)"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              Ver todas as imagens
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!albumsLoading && albums.length > 0 && totalAlbumPages > 1" class="pagination-container">
+        <button
+          class="pagination-btn"
+          [disabled]="currentAlbumPage === 1"
+          (click)="goToAlbumPage(albumsPage - 1)"
+        >
+          Anterior
+        </button>
+
+        <span class="page-info">
+          Página {{ currentAlbumPage }} de {{ totalAlbumPages }}
+        </span>
+
+        <button
+          class="pagination-btn"
+          [disabled]="currentAlbumPage === totalAlbumPages"
+          (click)="goToAlbumPage(albumsPage + 1)"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showImageModal" class="modal-overlay" (click)="closeImageModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Todas as Imagens do Álbum</h2>
+        <button class="close-btn" (click)="closeImageModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="images-grid">
+          <div *ngFor="let image of selectedAlbumImages" class="image-item">
+            <img [src]="image.fileUrl" [alt]="'Imagem ' + image.id" />
+            <div *ngIf="image.isDefault" class="default-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+              </svg>
+              Capa
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
