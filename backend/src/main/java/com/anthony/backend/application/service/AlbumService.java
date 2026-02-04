@@ -7,6 +7,7 @@ import com.anthony.backend.domain.repository.AlbumRepository;
 import com.anthony.backend.domain.repository.ArtistRepository;
 import com.anthony.backend.infrastructure.persistence.entity.AlbumEntity;
 import com.anthony.backend.infrastructure.persistence.jpa.AlbumJpaRepository;
+import com.anthony.backend.infrastructure.storage.MinioStorageService;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
@@ -26,15 +27,18 @@ public class AlbumService {
     private final ArtistRepository artistRepository;
     private final AlbumJpaRepository albumJpaRepository;
     private final AlbumMapper albumMapper;
+    private final MinioStorageService minioStorageService;
 
     public AlbumService(AlbumRepository albumRepository,
                         ArtistRepository artistRepository,
                         AlbumJpaRepository albumJpaRepository,
-                        AlbumMapper albumMapper) {
+                        AlbumMapper albumMapper,
+                        MinioStorageService minioStorageService) {
         this.albumRepository = albumRepository;
         this.artistRepository = artistRepository;
         this.albumJpaRepository = albumJpaRepository;
         this.albumMapper = albumMapper;
+        this.minioStorageService = minioStorageService;
     }
 
     @Transactional
@@ -52,8 +56,10 @@ public class AlbumService {
     }
 
     public Album findById(Long id) {
-        return albumRepository.findById(id)
+        Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
+        populateImageUrls(album);
+        return album;
     }
 
     public Page<Album> findAll(String title, String artistName, Long artistId, Pageable pageable) {
@@ -84,7 +90,11 @@ public class AlbumService {
         };
 
         return albumJpaRepository.findAll(spec, pageable)
-                .map(albumMapper::toDomain);
+                .map(entity -> {
+                    Album album = albumMapper.toDomain(entity);
+                    populateImageUrls(album);
+                    return album;
+                });
     }
 
     @Transactional
@@ -120,5 +130,16 @@ public class AlbumService {
         }
 
         albumRepository.deleteById(id);
+    }
+
+    private void populateImageUrls(Album album) {
+        if (album.getImages() != null && !album.getImages().isEmpty()) {
+            album.getImages().forEach(image -> {
+                if (Boolean.TRUE.equals(image.getIsDefault())) {
+                    String presignedUrl = minioStorageService.getPresignedUrl(image.getFileKey());
+                    image.setFileUrl(presignedUrl);
+                }
+            });
+        }
     }
 }
