@@ -15,6 +15,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/artists/pages/artist-list/artist-list.component').then(m => m.ArtistListComponent)
   },
   {
+    path: 'artists/:id',
+    loadComponent: () => import('./features/artists/pages/artist-detail/artist-detail.component').then(m => m.ArtistDetailComponent)
+  },
+  {
     path: '**',
     redirectTo: '/home'
   }

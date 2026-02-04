@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { ArtistResponseDto } from '../dtos/artist-response.dto';
+import { AlbumResponseDto } from '../dtos/album-response.dto';
+import { AlbumImage } from '../models/album.model';
+import { Artist } from '../models/artist.model';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -9,6 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class ArtistService {
   private readonly apiUrl = `${environment.apiUrl}${environment.endpoints.artists}`;
+  private readonly albumApiUrl = `${environment.apiUrl}${environment.endpoints.albums}`;
 
   private readonly defaultImages = [
     'assets/artists/photo-1493225457124-a3eb161ffa5f.jpeg',
@@ -64,6 +68,36 @@ export class ArtistService {
   private getImageForArtist(artistId: number, fallbackIndex: number): string {
     const imageIndex = (artistId % this.defaultImages.length);
     return this.defaultImages[imageIndex] || this.defaultImages[fallbackIndex % this.defaultImages.length];
+  }
+
+  getArtistById(artistId: number): Observable<Artist> {
+    return this.http.get<Artist>(`${this.apiUrl}/${artistId}`).pipe(
+      map(artist => ({
+        ...artist,
+        imageUrl: this.getImageForArtist(artist.id, 0)
+      }))
+    );
+  }
+
+  getAlbumsByArtist(
+    artistId: number,
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'id',
+    direction: string = 'ASC'
+  ): Observable<AlbumResponseDto> {
+    const params = new HttpParams()
+      .set('artistId', artistId.toString())
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+
+    return this.http.get<AlbumResponseDto>(this.albumApiUrl, { params });
+  }
+
+  getAlbumImages(albumId: number): Observable<AlbumImage[]> {
+    return this.http.get<AlbumImage[]>(`${this.albumApiUrl}/${albumId}/images`);
   }
 }
 
