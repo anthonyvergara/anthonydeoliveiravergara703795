@@ -65,13 +65,14 @@ public class AlbumController {
 
     @GetMapping
     @Operation(summary = "Listar álbuns com paginação e filtros",
-            description = "Lista todos os álbuns com suporte a paginação, ordenação e filtros por título e nome do artista")
+            description = "Lista todos os álbuns com suporte a paginação, ordenação e filtros por título, nome do artista e ID do artista")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de álbuns retornada com sucesso")
     })
     public ResponseEntity<PageResponseDTO<AlbumResponseDTO>> findAll(
             @Parameter(description = "Filtro por título do álbum") @RequestParam(required = false) String title,
             @Parameter(description = "Filtro por nome do artista") @RequestParam(required = false) String artistName,
+            @Parameter(description = "Filtro por ID do artista") @RequestParam(required = false) Long artistId,
             @Parameter(description = "Número da página (inicia em 0)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Quantidade de itens por página") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Campo para ordenação (ex: title, id)") @RequestParam(defaultValue = "id") String sortBy,
@@ -80,7 +81,7 @@ public class AlbumController {
         Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
 
-        Page<Album> albums = albumService.findAll(title, artistName, pageable);
+        Page<Album> albums = albumService.findAll(title, artistName, artistId, pageable);
         Page<AlbumResponseDTO> responsePage = albums.map(albumMapper::toResponseDTO);
         return ResponseEntity.ok(PageResponseDTO.from(responsePage));
     }

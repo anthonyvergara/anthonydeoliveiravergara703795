@@ -56,7 +56,7 @@ public class AlbumService {
                 .orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
     }
 
-    public Page<Album> findAll(String title, String artistName, Pageable pageable) {
+    public Page<Album> findAll(String title, String artistName, Long artistId, Pageable pageable) {
         Specification<AlbumEntity> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -73,6 +73,11 @@ public class AlbumService {
                         criteriaBuilder.lower(artistJoin.get("name")),
                         "%" + artistName.toLowerCase() + "%"
                 ));
+            }
+
+            if (artistId != null) {
+                Join<Object, Object> artistJoin = root.join("artist");
+                predicates.add(criteriaBuilder.equal(artistJoin.get("id"), artistId));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
