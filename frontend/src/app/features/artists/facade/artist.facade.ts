@@ -60,7 +60,6 @@ export class ArtistFacade {
         catchError(error => {
           this.artistState.setError('Erro ao carregar artistas');
           this.artistState.setLoading(false);
-          console.error('Erro ao carregar artistas:', error);
           return of(null);
         })
       )
@@ -112,7 +111,6 @@ export class ArtistFacade {
         catchError(error => {
           this.artistState.setError('Erro ao carregar detalhes do artista');
           this.artistState.setLoading(false);
-          console.error('Erro ao carregar artista:', error);
           return of(null);
         })
       )
@@ -131,7 +129,6 @@ export class ArtistFacade {
         catchError(error => {
           this.artistState.setError('Erro ao carregar álbuns');
           this.artistState.setAlbumsLoading(false);
-          console.error('Erro ao carregar álbuns:', error);
           return of(null);
         })
       )
@@ -145,7 +142,6 @@ export class ArtistFacade {
           this.artistState.setSelectedAlbumImages(images, albumId);
         }),
         catchError(error => {
-          console.error('Erro ao carregar imagens do álbum:', error);
           return of([]);
         })
       )

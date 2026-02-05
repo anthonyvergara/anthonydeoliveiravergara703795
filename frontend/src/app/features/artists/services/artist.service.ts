@@ -99,5 +99,13 @@ export class ArtistService {
   getAlbumImages(albumId: number): Observable<AlbumImage[]> {
     return this.http.get<AlbumImage[]>(`${this.albumApiUrl}/${albumId}/images`);
   }
+
+  createArtist(name: string): Observable<Artist> {
+    return this.http.post<Artist>(this.apiUrl, { name });
+  }
+
+  createAlbum(title: string, artistId: number): Observable<any> {
+    return this.http.post(this.albumApiUrl, { title, artistId });
+  }
 }
 
