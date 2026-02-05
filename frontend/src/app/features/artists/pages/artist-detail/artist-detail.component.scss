@@ -171,6 +171,17 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
+.albums-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .section-title {
   display: flex;
   align-items: center;
@@ -178,14 +189,42 @@
   color: #2d3748;
   font-size: 1.75rem;
   font-weight: 600;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
+  margin: 0;
 
   svg {
     width: 2rem;
     height: 2rem;
     color: #667eea;
+  }
+}
+
+.btn-create-album {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(139, 92, 246, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 

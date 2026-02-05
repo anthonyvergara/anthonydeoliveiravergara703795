@@ -1,19 +1,23 @@
-import { Component, OnInit, OnDestroy, computed, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, computed, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ArtistFacade } from '../../facade/artist.facade';
 import { Artist } from '../../models/artist.model';
+import { ArtistFormComponent } from '../../components/artist-form/artist-form.component';
+import { ArtistService } from '../../services/artist.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-artist-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ArtistFormComponent],
   templateUrl: './artist-list.component.html',
   styleUrls: ['./artist-list.component.scss']
 })
 export class ArtistListComponent implements OnInit, OnDestroy {
+  @ViewChild(ArtistFormComponent) artistFormComponent?: ArtistFormComponent;
   private destroy$ = new Subject<void>();
 
   searchTerm = signal('');
@@ -21,6 +25,7 @@ export class ArtistListComponent implements OnInit, OnDestroy {
   totalPages = signal(1);
   totalArtists = signal(0);
   itemsPerPage = 12;
+  showArtistModal = signal(false);
 
   artists$!: Observable<Artist[]>;
   loading$!: Observable<boolean>;
@@ -28,6 +33,8 @@ export class ArtistListComponent implements OnInit, OnDestroy {
 
   constructor(
     private artistFacade: ArtistFacade,
+    private artistService: ArtistService,
+    private toastService: ToastService,
     private router: Router
   ) {
     this.artists$ = this.artistFacade.artists$;
@@ -120,6 +127,35 @@ export class ArtistListComponent implements OnInit, OnDestroy {
 
   viewArtistDetail(artistId: number): void {
     this.router.navigate(['/artists', artistId]);
+  }
+
+  openArtistModal(): void {
+    this.showArtistModal.set(true);
+  }
+
+  closeArtistModal(): void {
+    this.showArtistModal.set(false);
+    if (this.artistFormComponent) {
+      this.artistFormComponent.reset();
+    }
+  }
+
+  onCreateArtist(name: string): void {
+    this.artistService.createArtist(name)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (artist) => {
+          this.toastService.showSuccess(`Artista "${artist.name}" criado com sucesso!`);
+          this.closeArtistModal();
+          this.artistFacade.loadArtists();
+        },
+        error: (error) => {
+          if (this.artistFormComponent) {
+            const errorMessage = error.error?.detail || 'Erro ao criar artista. Tente novamente.';
+            this.artistFormComponent.setError(errorMessage);
+          }
+        }
+      });
   }
 }
 

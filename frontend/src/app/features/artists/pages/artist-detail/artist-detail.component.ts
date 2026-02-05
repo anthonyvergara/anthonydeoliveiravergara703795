@@ -1,19 +1,23 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ArtistFacade } from '../../facade/artist.facade';
 import { Artist } from '../../models/artist.model';
 import { Album, AlbumImage } from '../../models/album.model';
+import { AlbumFormComponent } from '../../components/album-form/album-form.component';
+import { ArtistService } from '../../services/artist.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-artist-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AlbumFormComponent],
   templateUrl: './artist-detail.component.html',
   styleUrls: ['./artist-detail.component.scss']
 })
 export class ArtistDetailComponent implements OnInit, OnDestroy {
+  @ViewChild(AlbumFormComponent) albumFormComponent?: AlbumFormComponent;
   private destroy$ = new Subject<void>();
 
   artist: Artist | null = null;
@@ -25,11 +29,14 @@ export class ArtistDetailComponent implements OnInit, OnDestroy {
   selectedAlbumImages: AlbumImage[] = [];
   selectedAlbumId: number | null = null;
   showImageModal = false;
+  showAlbumModal = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private artistFacade: ArtistFacade
+    private artistFacade: ArtistFacade,
+    private artistService: ArtistService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +147,37 @@ export class ArtistDetailComponent implements OnInit, OnDestroy {
 
   get currentAlbumPage(): number {
     return this.albumsPage + 1;
+  }
+
+  openAlbumModal(): void {
+    this.showAlbumModal = true;
+  }
+
+  closeAlbumModal(): void {
+    this.showAlbumModal = false;
+    if (this.albumFormComponent) {
+      this.albumFormComponent.reset();
+    }
+  }
+
+  onCreateAlbum(data: { title: string; artistId: number }): void {
+    this.artistService.createAlbum(data.title, data.artistId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (album) => {
+          this.toastService.showSuccess(`Álbum "${data.title}" criado com sucesso!`);
+          this.closeAlbumModal();
+          if (this.artist) {
+            this.artistFacade.loadArtistDetail(this.artist.id);
+          }
+        },
+        error: (error) => {
+          if (this.albumFormComponent) {
+            const errorMessage = error.error?.detail || 'Erro ao criar álbum. Tente novamente.';
+            this.albumFormComponent.setError(errorMessage);
+          }
+        }
+      });
   }
 }
 

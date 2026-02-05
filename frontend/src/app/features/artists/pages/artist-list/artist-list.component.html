@@ -4,6 +4,12 @@
       <h1 class="title">Artistas</h1>
       <p class="subtitle">Descubra e explore seus artistas favoritos</p>
     </div>
+    <button class="btn-create" (click)="openArtistModal()">
+      <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Novo Artista
+    </button>
   </div>
 
   <div class="search-section">
@@ -105,5 +111,11 @@
       de {{ totalArtists() }} artistas
     </p>
   </div>
+
+  <app-artist-form
+    *ngIf="showArtistModal()"
+    (closeModal)="closeArtistModal()"
+    (submitForm)="onCreateArtist($event)">
+  </app-artist-form>
 </div>
 
