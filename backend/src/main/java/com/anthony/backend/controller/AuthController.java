@@ -3,13 +3,13 @@ package com.anthony.backend.controller;
 import com.anthony.backend.application.service.AuthService;
 import com.anthony.backend.controller.dto.AuthResponse;
 import com.anthony.backend.controller.dto.LoginRequest;
+import com.anthony.backend.controller.dto.RefreshTokenRequest;
 import com.anthony.backend.controller.dto.RegisterRequest;
 import com.anthony.backend.domain.exception.BaseExceptionController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,14 +27,18 @@ public class AuthController extends BaseExceptionController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Login", description = "Autenticar usuário e obter token JWT")
+    @Operation(summary = "Login", description = "Autenticar usuário e obter tokens (access e refresh)")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "Atualizar token", description = "Gerar novo token JWT para usuário autenticado")
-    public ResponseEntity<AuthResponse> refresh(Authentication authentication) {
-        return ResponseEntity.ok(authService.refresh(authentication.getName()));
+    @Operation(
+        summary = "Renovar access token",
+        description = "Envia o refresh token para obter um novo access token sem precisar fazer login novamente"
+    )
+    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refresh(request.getRefreshToken()));
     }
 }
+

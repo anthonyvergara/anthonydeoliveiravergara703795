@@ -39,10 +39,13 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthResponse.builder()
-                .token(jwtToken)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .username(user.getUsername())
                 .role(user.getRole().name())
                 .build();
@@ -59,23 +62,36 @@ public class AuthService {
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        var jwtToken = jwtService.generateToken(user);
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
         return AuthResponse.builder()
-                .token(jwtToken)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .username(user.getUsername())
                 .role(user.getRole().name())
                 .build();
     }
 
-    public AuthResponse refresh(String username) {
+    public AuthResponse refresh(String refreshToken) {
+        String tokenType = jwtService.getTokenType(refreshToken);
+        if (!"REFRESH".equals(tokenType)) {
+            throw new RuntimeException("Token inválido: não é um refresh token");
+        }
+
+        String username = jwtService.extractUsername(refreshToken);
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        var jwtToken = jwtService.generateToken(user);
+        if (!jwtService.isTokenValid(refreshToken, user)) {
+            throw new RuntimeException("Refresh token inválido ou expirado");
+        }
+
+        var newAccessToken = jwtService.generateAccessToken(user);
 
         return AuthResponse.builder()
-                .token(jwtToken)
+                .accessToken(newAccessToken)
+                .refreshToken(refreshToken)
                 .username(user.getUsername())
                 .role(user.getRole().name())
                 .build();

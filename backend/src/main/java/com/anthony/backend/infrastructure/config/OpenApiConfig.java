@@ -28,7 +28,6 @@ public class OpenApiConfig {
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .description("Insira o token JWT gerado no login")));
+                                .description("Insira o Access Token JWT (expira em 5 minutos)")));
     }
 }
-
