@@ -7,6 +7,7 @@ import com.anthony.backend.domain.model.User;
 import com.anthony.backend.domain.repository.UserRepository;
 import com.anthony.backend.infrastructure.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -79,4 +81,3 @@ public class AuthService {
                 .build();
     }
 }
-
