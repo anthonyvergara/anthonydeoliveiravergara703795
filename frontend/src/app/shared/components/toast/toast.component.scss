@@ -1,0 +1,164 @@
+.toast-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 420px;
+  pointer-events: none;
+
+  @media (max-width: 640px) {
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+  }
+}
+
+.toast {
+  background: #2d2d2d;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  pointer-events: auto;
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  position: relative;
+}
+
+.toast-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Success Toast
+.toast-success {
+  border-left: 4px solid #10b981;
+
+  .toast-icon {
+    color: #10b981;
+  }
+
+  .toast-message {
+    color: #d1fae5;
+  }
+
+  .toast-close {
+    color: #86efac;
+
+    &:hover {
+      color: #d1fae5;
+    }
+  }
+}
+
+// Error Toast
+.toast-error {
+  border-left: 4px solid #ef4444;
+
+  .toast-icon {
+    color: #ef4444;
+  }
+
+  .toast-message {
+    color: #fecaca;
+  }
+
+  .toast-close {
+    color: #fca5a5;
+
+    &:hover {
+      color: #fecaca;
+    }
+  }
+}
+
+// Info Toast
+.toast-info {
+  border-left: 4px solid #3b82f6;
+
+  .toast-icon {
+    color: #3b82f6;
+  }
+
+  .toast-message {
+    color: #bfdbfe;
+  }
+
+  .toast-close {
+    color: #93c5fd;
+
+    &:hover {
+      color: #bfdbfe;
+    }
+  }
+}
+
+// Animation de saída
+.toast.removing {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+@keyframes slideOutRight {
+  to {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+

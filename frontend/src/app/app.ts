@@ -2,11 +2,12 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, ChildrenOutletContexts } from '@angular/router';
 import { routeAnimations } from './shared/animations/route-animations';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, ToastComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
   animations: [routeAnimations]

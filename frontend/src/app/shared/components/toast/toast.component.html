@@ -1,0 +1,30 @@
+<div class="toast-container">
+  <div
+    *ngFor="let toast of toastService.getToasts()()"
+    class="toast"
+    [class.toast-success]="toast.type === 'success'"
+    [class.toast-error]="toast.type === 'error'"
+    [class.toast-info]="toast.type === 'info'"
+    (click)="removeToast(toast)">
+
+    <div class="toast-content">
+      <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          [attr.d]="getIcon(toast.type)">
+        </path>
+      </svg>
+
+      <p class="toast-message">{{ toast.message }}</p>
+
+      <button class="toast-close" (click)="removeToast(toast); $event.stopPropagation()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
