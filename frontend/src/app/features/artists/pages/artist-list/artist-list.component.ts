@@ -140,22 +140,40 @@ export class ArtistListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCreateArtist(name: string): void {
-    this.artistService.createArtist(name)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (artist) => {
-          this.toastService.showSuccess(`Artista "${artist.name}" criado com sucesso!`);
-          this.closeArtistModal();
-          this.artistFacade.loadArtists();
-        },
-        error: (error) => {
-          if (this.artistFormComponent) {
-            const errorMessage = error.error?.detail || 'Erro ao criar artista. Tente novamente.';
-            this.artistFormComponent.setError(errorMessage);
+  onCreateArtist(data: { id?: number; name: string }): void {
+    if (data.id) {
+      this.artistService.updateArtist(data.id, data.name)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (artist) => {
+            this.toastService.showSuccess(`Artista "${artist.name}" atualizado com sucesso!`);
+            this.closeArtistModal();
+            this.artistFacade.loadArtists();
+          },
+          error: (error) => {
+            if (this.artistFormComponent) {
+              const errorMessage = error.error?.detail || 'Erro ao atualizar artista. Tente novamente.';
+              this.artistFormComponent.setError(errorMessage);
+            }
           }
-        }
-      });
+        });
+    } else {
+      this.artistService.createArtist(data.name)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (artist) => {
+            this.toastService.showSuccess(`Artista "${artist.name}" criado com sucesso!`);
+            this.closeArtistModal();
+            this.artistFacade.loadArtists();
+          },
+          error: (error) => {
+            if (this.artistFormComponent) {
+              const errorMessage = error.error?.detail || 'Erro ao criar artista. Tente novamente.';
+              this.artistFormComponent.setError(errorMessage);
+            }
+          }
+        });
+    }
   }
 }
 

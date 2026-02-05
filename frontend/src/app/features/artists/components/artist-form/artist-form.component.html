@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="onClose()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Novo Artista</h2>
+      <h2>{{ isEditMode() ? 'Editar Artista' : 'Novo Artista' }}</h2>
       <button class="close-btn" (click)="onClose()" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -20,8 +20,8 @@
           id="artistName"
           class="form-input"
           placeholder="Ex: The Beatles"
-          [ngModel]="artistName()"
-          (ngModelChange)="artistName.set($event); clearError()"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event); clearError()"
           [disabled]="isSubmitting()"
           name="artistName"
           autocomplete="off">
@@ -39,13 +39,13 @@
           Cancelar
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="isSubmitting()">
-          <span *ngIf="!isSubmitting()">Criar Artista</span>
+          <span *ngIf="!isSubmitting()">{{ isEditMode() ? 'Salvar' : 'Criar Artista' }}</span>
           <span *ngIf="isSubmitting()" class="loading-text">
             <svg class="spinner" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Criando...
+            {{ isEditMode() ? 'Salvando...' : 'Criando...' }}
           </span>
         </button>
       </div>

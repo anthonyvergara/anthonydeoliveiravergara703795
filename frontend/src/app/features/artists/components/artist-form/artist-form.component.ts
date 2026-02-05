@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,25 +9,38 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './artist-form.component.html',
   styleUrls: ['./artist-form.component.scss']
 })
-export class ArtistFormComponent {
+export class ArtistFormComponent implements OnInit {
+  @Input() artistId?: number;
+  @Input() artistName?: string;
   @Output() closeModal = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<string>();
+  @Output() submitForm = new EventEmitter<{ id?: number; name: string }>();
 
-  artistName = signal('');
+  name = signal('');
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
+  isEditMode = signal(false);
+
+  ngOnInit(): void {
+    if (this.artistId && this.artistName) {
+      this.isEditMode.set(true);
+      this.name.set(this.artistName);
+    }
+  }
 
   onSubmit(): void {
-    const name = this.artistName().trim();
+    const artistName = this.name().trim();
 
-    if (!name) {
+    if (!artistName) {
       this.errorMessage.set('O nome do artista é obrigatório');
       return;
     }
 
     this.errorMessage.set(null);
     this.isSubmitting.set(true);
-    this.submitForm.emit(name);
+    this.submitForm.emit({
+      id: this.artistId,
+      name: artistName
+    });
   }
 
   onClose(): void {
@@ -44,9 +57,10 @@ export class ArtistFormComponent {
   }
 
   reset(): void {
-    this.artistName.set('');
+    this.name.set('');
     this.errorMessage.set(null);
     this.isSubmitting.set(false);
+    this.isEditMode.set(false);
   }
 }
 
