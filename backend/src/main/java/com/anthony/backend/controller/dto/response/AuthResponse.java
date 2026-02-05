@@ -1,4 +1,4 @@
-package com.anthony.backend.controller.dto;
+package com.anthony.backend.controller.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
     private String username;
-    private String password;
+    private String role;
 }
-

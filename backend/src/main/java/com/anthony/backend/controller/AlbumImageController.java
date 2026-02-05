@@ -2,8 +2,8 @@ package com.anthony.backend.controller;
 
 import com.anthony.backend.application.mapper.AlbumImageMapper;
 import com.anthony.backend.application.service.AlbumImageService;
-import com.anthony.backend.controller.dto.AlbumImageDTO;
-import com.anthony.backend.controller.dto.AlbumImageUploadResponseDTO;
+import com.anthony.backend.controller.dto.response.AlbumImageDTO;
+import com.anthony.backend.controller.dto.response.AlbumImageUploadResponseDTO;
 import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.AlbumImage;
 import io.swagger.v3.oas.annotations.Operation;

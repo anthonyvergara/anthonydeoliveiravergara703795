@@ -2,9 +2,9 @@ package com.anthony.backend.controller;
 
 import com.anthony.backend.application.mapper.ArtistMapper;
 import com.anthony.backend.application.service.ArtistService;
-import com.anthony.backend.controller.dto.ArtistRequestDTO;
-import com.anthony.backend.controller.dto.ArtistResponseDTO;
-import com.anthony.backend.controller.dto.PageResponseDTO;
+import com.anthony.backend.controller.dto.request.ArtistRequestDTO;
+import com.anthony.backend.controller.dto.response.ArtistResponseDTO;
+import com.anthony.backend.controller.dto.response.PageResponseDTO;
 import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.Artist;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,8 +1,8 @@
 package com.anthony.backend.application.service;
 
-import com.anthony.backend.controller.dto.AuthResponse;
-import com.anthony.backend.controller.dto.LoginRequest;
-import com.anthony.backend.controller.dto.RegisterRequest;
+import com.anthony.backend.controller.dto.response.AuthResponse;
+import com.anthony.backend.controller.dto.request.LoginRequest;
+import com.anthony.backend.controller.dto.request.RegisterRequest;
 import com.anthony.backend.domain.model.User;
 import com.anthony.backend.domain.repository.UserRepository;
 import com.anthony.backend.infrastructure.security.JwtService;

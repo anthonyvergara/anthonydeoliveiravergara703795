@@ -1,7 +1,7 @@
 package com.anthony.backend.application.mapper;
 
-import com.anthony.backend.controller.dto.AlbumSummaryDTO;
-import com.anthony.backend.controller.dto.ArtistResponseDTO;
+import com.anthony.backend.controller.dto.response.AlbumSummaryDTO;
+import com.anthony.backend.controller.dto.response.ArtistResponseDTO;
 import com.anthony.backend.domain.model.Album;
 import com.anthony.backend.domain.model.Artist;
 import com.anthony.backend.infrastructure.persistence.entity.ArtistEntity;

@@ -1,8 +1,8 @@
 package com.anthony.backend.application.mapper;
 
 import com.anthony.backend.domain.model.Album;
-import com.anthony.backend.controller.dto.AlbumCreateUpdateResponseDTO;
-import com.anthony.backend.controller.dto.AlbumResponseDTO;
+import com.anthony.backend.controller.dto.request.AlbumCreateUpdateResponseDTO;
+import com.anthony.backend.controller.dto.response.AlbumResponseDTO;
 import com.anthony.backend.infrastructure.persistence.entity.AlbumEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

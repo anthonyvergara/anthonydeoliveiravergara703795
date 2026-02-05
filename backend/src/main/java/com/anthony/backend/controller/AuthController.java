@@ -1,10 +1,10 @@
 package com.anthony.backend.controller;
 
 import com.anthony.backend.application.service.AuthService;
-import com.anthony.backend.controller.dto.AuthResponse;
-import com.anthony.backend.controller.dto.LoginRequest;
-import com.anthony.backend.controller.dto.RefreshTokenRequest;
-import com.anthony.backend.controller.dto.RegisterRequest;
+import com.anthony.backend.controller.dto.response.AuthResponse;
+import com.anthony.backend.controller.dto.request.LoginRequest;
+import com.anthony.backend.controller.dto.request.RefreshTokenRequest;
+import com.anthony.backend.controller.dto.request.RegisterRequest;
 import com.anthony.backend.domain.exception.BaseExceptionController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

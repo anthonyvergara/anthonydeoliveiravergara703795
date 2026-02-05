@@ -1,4 +1,4 @@
-package com.anthony.backend.controller.dto;
+package com.anthony.backend.controller.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
+public class LoginRequest {
     private String username;
     private String password;
 }

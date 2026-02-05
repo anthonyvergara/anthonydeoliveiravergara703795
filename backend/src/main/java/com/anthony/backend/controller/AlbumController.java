@@ -3,10 +3,10 @@ package com.anthony.backend.controller;
 
 import com.anthony.backend.application.mapper.AlbumMapper;
 import com.anthony.backend.application.service.AlbumService;
-import com.anthony.backend.controller.dto.AlbumCreateUpdateResponseDTO;
-import com.anthony.backend.controller.dto.AlbumRequestDTO;
-import com.anthony.backend.controller.dto.AlbumResponseDTO;
-import com.anthony.backend.controller.dto.PageResponseDTO;
+import com.anthony.backend.controller.dto.request.AlbumCreateUpdateResponseDTO;
+import com.anthony.backend.controller.dto.request.AlbumRequestDTO;
+import com.anthony.backend.controller.dto.response.AlbumResponseDTO;
+import com.anthony.backend.controller.dto.response.PageResponseDTO;
 import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.Album;
 import io.swagger.v3.oas.annotations.Operation;
