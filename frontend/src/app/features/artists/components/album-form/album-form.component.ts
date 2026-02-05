@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,27 +9,41 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './album-form.component.html',
   styleUrls: ['./album-form.component.scss']
 })
-export class AlbumFormComponent {
+export class AlbumFormComponent implements OnInit {
+  @Input() albumId?: number;
+  @Input() albumTitle?: string;
   @Input() artistId!: number;
   @Input() artistName: string = '';
   @Output() closeModal = new EventEmitter<void>();
-  @Output() submitForm = new EventEmitter<{ title: string; artistId: number }>();
+  @Output() submitForm = new EventEmitter<{ id?: number; title: string; artistId: number }>();
 
-  albumTitle = signal('');
+  title = signal('');
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
+  isEditMode = signal(false);
+
+  ngOnInit(): void {
+    if (this.albumId && this.albumTitle) {
+      this.isEditMode.set(true);
+      this.title.set(this.albumTitle);
+    }
+  }
 
   onSubmit(): void {
-    const title = this.albumTitle().trim();
+    const albumTitle = this.title().trim();
 
-    if (!title) {
+    if (!albumTitle) {
       this.errorMessage.set('O título do álbum é obrigatório');
       return;
     }
 
     this.errorMessage.set(null);
     this.isSubmitting.set(true);
-    this.submitForm.emit({ title, artistId: this.artistId });
+    this.submitForm.emit({
+      id: this.albumId,
+      title: albumTitle,
+      artistId: this.artistId
+    });
   }
 
   onClose(): void {
@@ -46,9 +60,10 @@ export class AlbumFormComponent {
   }
 
   reset(): void {
-    this.albumTitle.set('');
+    this.title.set('');
     this.errorMessage.set(null);
     this.isSubmitting.set(false);
+    this.isEditMode.set(false);
   }
 }
 

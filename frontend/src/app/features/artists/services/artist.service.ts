@@ -107,5 +107,23 @@ export class ArtistService {
   createAlbum(title: string, artistId: number): Observable<any> {
     return this.http.post(this.albumApiUrl, { title, artistId });
   }
+
+  updateArtist(id: number, name: string): Observable<Artist> {
+    return this.http.put<Artist>(`${this.apiUrl}/${id}`, { name });
+  }
+
+  updateAlbum(id: number, title: string, artistId: number): Observable<any> {
+    return this.http.put(`${this.albumApiUrl}/${id}`, { title, artistId });
+  }
+
+  uploadAlbumImages(albumId: number, files: File[], setAsDefault: boolean = false): Observable<any> {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+
+    const params = new HttpParams().set('setAsDefault', setAsDefault.toString());
+    return this.http.post(`${this.albumApiUrl}/${albumId}/images`, formData, { params });
+  }
 }
 
