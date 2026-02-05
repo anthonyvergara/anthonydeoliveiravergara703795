@@ -34,6 +34,9 @@ public class ArtistService {
 
     @Transactional
     public Artist create(String name) {
+        artistRepository.findByName(name).ifPresent(artist -> {
+            throw new RuntimeException("Artista com esse nome já existe");
+        });
         Artist artist = Artist.builder()
                 .name(name)
                 .build();
