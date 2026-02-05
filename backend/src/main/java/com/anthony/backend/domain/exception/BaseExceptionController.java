@@ -82,6 +82,21 @@ public abstract class BaseExceptionController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
     }
 
+    @ExceptionHandler(InvalidFileException.class)
+    @ResponseBody
+    public ResponseEntity<ProblemDetail> handleInvalidFile(InvalidFileException ex) {
+        log.warn("Arquivo inválido: {}", ex.getMessage());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+            HttpStatus.BAD_REQUEST,
+            ex.getMessage()
+        );
+        problemDetail.setTitle("Invalid File");
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
+    }
+
     @ExceptionHandler(GlobalExceptionHandler.class)
     @ResponseBody
     public ResponseEntity<ProblemDetail> handleBusinessException(GlobalExceptionHandler ex) {
@@ -215,4 +230,3 @@ public abstract class BaseExceptionController {
         return parts[parts.length - 1];
     }
 }
-

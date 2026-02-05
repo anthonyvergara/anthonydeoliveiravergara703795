@@ -1,5 +1,6 @@
 package com.anthony.backend.application.service;
 
+import com.anthony.backend.domain.exception.InvalidFileException;
 import com.anthony.backend.domain.model.Album;
 import com.anthony.backend.domain.model.AlbumImage;
 import com.anthony.backend.domain.repository.AlbumImageRepository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,10 +23,16 @@ public class AlbumImageService {
     private final AlbumService albumService;
     private final MinioStorageService minioStorageService;
 
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png");
+
     @Transactional
     public List<AlbumImage> uploadImages(Long albumId, MultipartFile[] files, Boolean setAsDefault) {
         Album album = albumService.findById(albumId);
         List<AlbumImage> uploadedImages = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            validateFileExtension(file);
+        }
 
         if (Boolean.TRUE.equals(setAsDefault)) {
             albumImageRepository.updateIsDefaultByAlbumId(albumId, false);
@@ -51,6 +59,28 @@ public class AlbumImageService {
         }
 
         return uploadedImages;
+    }
+
+    private void validateFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            throw new InvalidFileException("Nome do arquivo não pode ser vazio");
+        }
+
+        String extension = getFileExtension(originalFilename).toLowerCase();
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            throw new InvalidFileException(
+                String.format("Extensão de arquivo '%s' não permitida. Apenas arquivos .jpg, .jpeg e .png são aceitos", extension)
+            );
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex == -1 || lastDotIndex == filename.length() - 1) {
+            return "";
+        }
+        return filename.substring(lastDotIndex + 1);
     }
 
     public List<AlbumImage> getAlbumImages(Long albumId) {
