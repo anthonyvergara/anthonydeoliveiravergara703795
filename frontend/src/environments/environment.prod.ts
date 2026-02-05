@@ -1,9 +1,13 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.seudominio.com/api/v1',
+  apiUrl: 'https://api.production.com/api',
   endpoints: {
-    artists: '/artist',
-    albums: '/album',
+    artists: '/v1/artist',
+    albums: '/v1/album',
+    auth: {
+      login: '/auth/login',
+      refresh: '/auth/refresh'
+    }
   }
 };
 
