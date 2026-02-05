@@ -42,7 +42,7 @@ public class AlbumImageController extends BaseExceptionController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumImageUploadResponseDTO> uploadImages(
-            @Parameter(description = "ID do álbum") @RequestParam Long albumId,
+            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
             @RequestPart("files") MultipartFile[] files,
             @Parameter(description = "Definir primeira imagem como padrão") @RequestParam(required = false, defaultValue = "false") Boolean setAsDefault) {
 
@@ -68,7 +68,7 @@ public class AlbumImageController extends BaseExceptionController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<List<AlbumImageDTO>> getAlbumImages(
-            @Parameter(description = "ID do álbum") @RequestParam Long albumId) {
+            @Parameter(description = "ID do álbum") @PathVariable Long albumId) {
 
         List<AlbumImage> images = albumImageService.getAlbumImages(albumId);
 
@@ -103,7 +103,7 @@ public class AlbumImageController extends BaseExceptionController {
             @ApiResponse(responseCode = "404", description = "Imagem ou álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumImageDTO> setAsDefault(
-            @Parameter(description = "ID do álbum") @RequestParam Long albumId,
+            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
             @Parameter(description = "ID da imagem") @PathVariable Long imageId) {
 
         AlbumImage image = albumImageService.setAsDefault(albumId, imageId);
@@ -124,4 +124,3 @@ public class AlbumImageController extends BaseExceptionController {
         return ResponseEntity.noContent().build();
     }
 }
-
