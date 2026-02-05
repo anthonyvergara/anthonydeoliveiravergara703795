@@ -1,7 +1,7 @@
 package com.anthony.backend.application.service;
 
 import com.anthony.backend.application.mapper.AlbumMapper;
-import com.anthony.backend.domain.exception.ResourceNotFoundException;
+import com.anthony.backend.domain.exception.ResourceNotFoundExceptionHandler;
 import com.anthony.backend.domain.model.Album;
 import com.anthony.backend.domain.model.Artist;
 import com.anthony.backend.domain.repository.AlbumRepository;
@@ -45,7 +45,7 @@ public class AlbumService {
     @Transactional
     public Album create(String title, Long artistId) {
         Artist artist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artista", artistId));
+                .orElseThrow(() -> new ResourceNotFoundExceptionHandler("Artista", artistId));
 
         Album album = Album.builder()
                 .title(title)
@@ -58,7 +58,7 @@ public class AlbumService {
 
     public Album findById(Long id) {
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Álbum", id));
+                .orElseThrow(() -> new ResourceNotFoundExceptionHandler("Álbum", id));
         populateImageUrls(album);
         return album;
     }
@@ -101,11 +101,11 @@ public class AlbumService {
     @Transactional
     public Album update(Long id, String title, Long artistId) {
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Álbum", id));
+                .orElseThrow(() -> new ResourceNotFoundExceptionHandler("Álbum", id));
 
         Artist oldArtist = album.getArtist();
         Artist newArtist = artistRepository.findById(artistId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artista", artistId));
+                .orElseThrow(() -> new ResourceNotFoundExceptionHandler("Artista", artistId));
 
         if (oldArtist != null && !oldArtist.getId().equals(newArtist.getId())) {
             oldArtist.removeAlbum(album);
@@ -123,7 +123,7 @@ public class AlbumService {
     @Transactional
     public void delete(Long id) {
         Album album = albumRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Álbum", id));
+                .orElseThrow(() -> new ResourceNotFoundExceptionHandler("Álbum", id));
 
         Artist artist = album.getArtist();
         if (artist != null) {

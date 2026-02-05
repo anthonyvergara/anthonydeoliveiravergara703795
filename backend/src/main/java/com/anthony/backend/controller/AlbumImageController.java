@@ -4,6 +4,7 @@ import com.anthony.backend.application.mapper.AlbumImageMapper;
 import com.anthony.backend.application.service.AlbumImageService;
 import com.anthony.backend.controller.dto.AlbumImageDTO;
 import com.anthony.backend.controller.dto.AlbumImageUploadResponseDTO;
+import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.AlbumImage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/album/{albumId}/images")
 @Tag(name = "Imagens de Álbuns", description = "API para gerenciamento de imagens de álbuns")
 @RequiredArgsConstructor
-public class AlbumImageController {
+public class AlbumImageController extends BaseExceptionController {
 
     private final AlbumImageService albumImageService;
     private final AlbumImageMapper albumImageMapper;
@@ -41,7 +42,7 @@ public class AlbumImageController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumImageUploadResponseDTO> uploadImages(
-            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
+            @Parameter(description = "ID do álbum") @RequestParam Long albumId,
             @RequestPart("files") MultipartFile[] files,
             @Parameter(description = "Definir primeira imagem como padrão") @RequestParam(required = false, defaultValue = "false") Boolean setAsDefault) {
 
@@ -67,7 +68,7 @@ public class AlbumImageController {
             @ApiResponse(responseCode = "404", description = "Álbum não encontrado", content = @Content)
     })
     public ResponseEntity<List<AlbumImageDTO>> getAlbumImages(
-            @Parameter(description = "ID do álbum") @PathVariable Long albumId) {
+            @Parameter(description = "ID do álbum") @RequestParam Long albumId) {
 
         List<AlbumImage> images = albumImageService.getAlbumImages(albumId);
 
@@ -87,7 +88,6 @@ public class AlbumImageController {
             @ApiResponse(responseCode = "404", description = "Imagem não encontrada", content = @Content)
     })
     public ResponseEntity<AlbumImageDTO> getImageById(
-            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
             @Parameter(description = "ID da imagem") @PathVariable Long imageId) {
 
         AlbumImage image = albumImageService.getImageById(imageId);
@@ -103,7 +103,7 @@ public class AlbumImageController {
             @ApiResponse(responseCode = "404", description = "Imagem ou álbum não encontrado", content = @Content)
     })
     public ResponseEntity<AlbumImageDTO> setAsDefault(
-            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
+            @Parameter(description = "ID do álbum") @RequestParam Long albumId,
             @Parameter(description = "ID da imagem") @PathVariable Long imageId) {
 
         AlbumImage image = albumImageService.setAsDefault(albumId, imageId);
@@ -118,10 +118,10 @@ public class AlbumImageController {
             @ApiResponse(responseCode = "404", description = "Imagem não encontrada", content = @Content)
     })
     public ResponseEntity<Void> deleteImage(
-            @Parameter(description = "ID do álbum") @PathVariable Long albumId,
             @Parameter(description = "ID da imagem") @PathVariable Long imageId) {
 
         albumImageService.deleteImage(imageId);
         return ResponseEntity.noContent().build();
     }
 }
+

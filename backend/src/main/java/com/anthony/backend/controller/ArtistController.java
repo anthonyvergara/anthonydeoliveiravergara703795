@@ -5,6 +5,7 @@ import com.anthony.backend.application.service.ArtistService;
 import com.anthony.backend.controller.dto.ArtistRequestDTO;
 import com.anthony.backend.controller.dto.ArtistResponseDTO;
 import com.anthony.backend.controller.dto.PageResponseDTO;
+import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.Artist;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/artist")
 @Tag(name = "Artistas", description = "API para gerenciamento de artistas")
-public class ArtistController {
+public class ArtistController extends BaseExceptionController {
 
     private final ArtistService artistService;
     private final ArtistMapper artistMapper;

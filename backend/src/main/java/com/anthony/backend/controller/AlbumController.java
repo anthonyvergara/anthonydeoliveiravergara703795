@@ -3,9 +3,11 @@ package com.anthony.backend.controller;
 
 import com.anthony.backend.application.mapper.AlbumMapper;
 import com.anthony.backend.application.service.AlbumService;
+import com.anthony.backend.controller.dto.AlbumCreateUpdateResponseDTO;
 import com.anthony.backend.controller.dto.AlbumRequestDTO;
 import com.anthony.backend.controller.dto.AlbumResponseDTO;
 import com.anthony.backend.controller.dto.PageResponseDTO;
+import com.anthony.backend.domain.exception.BaseExceptionController;
 import com.anthony.backend.domain.model.Album;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/album")
 @Tag(name = "Álbuns", description = "API para gerenciamento de álbuns")
-public class AlbumController {
+public class AlbumController extends BaseExceptionController {
 
     private final AlbumService albumService;
     private final AlbumMapper albumMapper;
@@ -41,13 +42,13 @@ public class AlbumController {
     @Operation(summary = "Criar um novo álbum", description = "Cria um novo álbum associado a um artista")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Álbum criado com sucesso",
-                    content = @Content(schema = @Schema(implementation = AlbumResponseDTO.class))),
+                    content = @Content(schema = @Schema(implementation = AlbumCreateUpdateResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
             @ApiResponse(responseCode = "404", description = "Artista não encontrado", content = @Content)
     })
-    public ResponseEntity<AlbumResponseDTO> create(@Valid @RequestBody AlbumRequestDTO request) {
+    public ResponseEntity<AlbumCreateUpdateResponseDTO> create(@Valid @RequestBody AlbumRequestDTO request) {
         Album album = albumService.create(request.getTitle(), request.getArtistId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(albumMapper.toResponseDTO(album));
+        return ResponseEntity.status(HttpStatus.CREATED).body(albumMapper.toCreateUpdateResponseDTO(album));
     }
 
     @GetMapping("/{id}")
@@ -90,15 +91,15 @@ public class AlbumController {
     @Operation(summary = "Atualizar um álbum", description = "Atualiza os dados de um álbum existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Álbum atualizado com sucesso",
-                    content = @Content(schema = @Schema(implementation = AlbumResponseDTO.class))),
+                    content = @Content(schema = @Schema(implementation = AlbumCreateUpdateResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
             @ApiResponse(responseCode = "404", description = "Álbum ou artista não encontrado", content = @Content)
     })
-    public ResponseEntity<AlbumResponseDTO> update(
+    public ResponseEntity<AlbumCreateUpdateResponseDTO> update(
             @Parameter(description = "ID do álbum") @PathVariable Long id,
             @Valid @RequestBody AlbumRequestDTO request) {
         Album album = albumService.update(id, request.getTitle(), request.getArtistId());
-        return ResponseEntity.ok(albumMapper.toResponseDTO(album));
+        return ResponseEntity.ok(albumMapper.toCreateUpdateResponseDTO(album));
     }
 
     @DeleteMapping("/{id}")
