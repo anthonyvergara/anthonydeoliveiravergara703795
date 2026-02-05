@@ -1,0 +1,92 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h2>Upload de Imagens</h2>
+        <p class="album-subtitle">{{ albumTitle }}</p>
+      </div>
+      <button class="close-btn" (click)="onClose()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Drag & Drop Area -->
+      <div
+        class="upload-area"
+        [class.drag-over]="dragOver()"
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)">
+        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+        </svg>
+        <h3>Arraste suas imagens aqui</h3>
+        <p>ou clique para selecionar</p>
+        <p class="file-types">JPG, PNG • Máx 5MB por arquivo</p>
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png"
+          multiple
+          (change)="onFileSelect($event)"
+          class="file-input">
+      </div>
+
+      <!-- Preview Grid -->
+      <div *ngIf="selectedFiles().length > 0" class="preview-section">
+        <h3 class="preview-title">Imagens Selecionadas ({{ selectedFiles().length }})</h3>
+        <div class="preview-grid">
+          <div *ngFor="let url of previewUrls(); let i = index" class="preview-item">
+            <img [src]="url" [alt]="selectedFiles()[i].name" class="preview-image">
+            <button class="remove-btn" (click)="removeFile(i)" type="button">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+            <div class="file-name">{{ selectedFiles()[i].name }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Set as Default Checkbox -->
+      <div *ngIf="selectedFiles().length > 0" class="checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [checked]="setAsDefault()"
+            (change)="setAsDefault.set(!setAsDefault())"
+            class="checkbox-input">
+          <span class="checkbox-text">Definir primeira imagem como capa padrão</span>
+        </label>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage()" class="error-message">
+        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ errorMessage() }}
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isUploading()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="isUploading() || selectedFiles().length === 0">
+          <span *ngIf="!isUploading()">Upload ({{ selectedFiles().length }})</span>
+          <span *ngIf="isUploading()" class="loading-text">
+            <svg class="spinner" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Enviando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
