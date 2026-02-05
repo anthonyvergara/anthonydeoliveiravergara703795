@@ -1,6 +1,9 @@
 package com.anthony.backend.application.service;
 
 import com.anthony.backend.application.mapper.ArtistMapper;
+import com.anthony.backend.domain.exception.DuplicateResourceException;
+import com.anthony.backend.domain.exception.ResourceConflictException;
+import com.anthony.backend.domain.exception.ResourceNotFoundException;
 import com.anthony.backend.domain.model.Artist;
 import com.anthony.backend.domain.repository.ArtistRepository;
 import com.anthony.backend.infrastructure.persistence.entity.ArtistEntity;
@@ -35,7 +38,7 @@ public class ArtistService {
     @Transactional
     public Artist create(String name) {
         artistRepository.findByName(name).ifPresent(artist -> {
-            throw new RuntimeException("Artista com esse nome já existe");
+            throw new DuplicateResourceException("Artista", "nome", name);
         });
         Artist artist = Artist.builder()
                 .name(name)
@@ -46,7 +49,7 @@ public class ArtistService {
 
     public Artist findById(Long id) {
         return artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Artista", id));
     }
 
     public Page<Artist> findAll(String name, String albumTitle, boolean includeAlbums, Pageable pageable) {
@@ -78,7 +81,7 @@ public class ArtistService {
     @Transactional
     public Artist update(Long id, String name) {
         Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Artista", id));
 
         artist.setName(name);
 
@@ -88,10 +91,10 @@ public class ArtistService {
     @Transactional
     public void delete(Long id) {
         Artist artist = artistRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Artista", id));
 
         if (!artist.getAlbums().isEmpty()) {
-            throw new RuntimeException("Não é possível deletar artista que possui álbuns");
+            throw new ResourceConflictException("Não é possível deletar artista que possui álbuns");
         }
 
         artistRepository.deleteById(id);

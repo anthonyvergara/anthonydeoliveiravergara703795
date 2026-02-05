@@ -1,5 +1,6 @@
 package com.anthony.backend.infrastructure.storage;
 
+import com.anthony.backend.domain.exception.StorageException;
 import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class MinioStorageService {
 
             return fileName;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao fazer upload do arquivo para o MinIO", e);
+            throw new StorageException("Erro ao fazer upload do arquivo", e);
         }
     }
 
@@ -52,7 +53,7 @@ public class MinioStorageService {
                             .build()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar URL pré-assinada", e);
+            throw new StorageException("Erro ao gerar URL pré-assinada", e);
         }
     }
 
@@ -65,7 +66,7 @@ public class MinioStorageService {
                             .build()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar arquivo do MinIO", e);
+            throw new StorageException("Erro ao deletar arquivo", e);
         }
     }
 
@@ -77,4 +78,3 @@ public class MinioStorageService {
         return String.format("album-%d/%s%s", albumId, UUID.randomUUID(), extension);
     }
 }
-

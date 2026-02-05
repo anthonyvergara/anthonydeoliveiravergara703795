@@ -1,6 +1,5 @@
 package com.anthony.backend.application.service;
 
-import com.anthony.backend.application.mapper.AlbumImageMapper;
 import com.anthony.backend.domain.model.Album;
 import com.anthony.backend.domain.model.AlbumImage;
 import com.anthony.backend.domain.repository.AlbumImageRepository;
