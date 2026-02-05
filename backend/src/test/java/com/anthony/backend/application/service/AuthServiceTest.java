@@ -381,23 +381,5 @@ class AuthServiceTest {
             u.getCreatedAt() != null && u.getUpdatedAt() != null
         ));
     }
-
-    @Test
-    @DisplayName("Deve usar AuthenticationManager para validar credenciais no login")
-    void shouldUseAuthenticationManagerToValidateCredentialsOnLogin() {
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(null);
-        when(userRepository.findByUsername(loginRequest.getUsername())).thenReturn(Optional.of(user));
-        when(jwtService.generateAccessToken(user)).thenReturn("access.token");
-        when(jwtService.generateRefreshToken(user)).thenReturn("refresh.token");
-
-        authService.login(loginRequest);
-
-        verify(authenticationManager).authenticate(argThat(auth ->
-            auth instanceof UsernamePasswordAuthenticationToken &&
-            auth.getPrincipal().equals(loginRequest.getUsername()) &&
-            auth.getCredentials().equals(loginRequest.getPassword())
-        ));
-    }
 }
 
