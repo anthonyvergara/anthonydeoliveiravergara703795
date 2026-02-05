@@ -1,6 +1,7 @@
 package com.anthony.backend.application.mapper;
 
 import com.anthony.backend.domain.model.Album;
+import com.anthony.backend.controller.dto.AlbumCreateUpdateResponseDTO;
 import com.anthony.backend.controller.dto.AlbumResponseDTO;
 import com.anthony.backend.infrastructure.persistence.entity.AlbumEntity;
 import org.mapstruct.Mapper;
@@ -18,4 +19,8 @@ public interface AlbumMapper {
     @Mapping(target = "artistName", source = "artist.name")
     @Mapping(target = "artistId", source = "artist.id")
     AlbumResponseDTO toResponseDTO(Album album);
+
+    @Mapping(target = "artistName", source = "artist.name")
+    @Mapping(target = "artistId", source = "artist.id")
+    AlbumCreateUpdateResponseDTO toCreateUpdateResponseDTO(Album album);
 }
