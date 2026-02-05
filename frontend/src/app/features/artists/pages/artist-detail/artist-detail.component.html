@@ -20,7 +20,14 @@
         <img [src]="artist.imageUrl" [alt]="artist.name" />
       </div>
       <div class="artist-details">
-        <h2>Informações do Artista</h2>
+        <div class="details-header">
+          <h2>Informações do Artista</h2>
+          <button class="btn-edit-artist" (click)="openEditArtistModal()" title="Editar artista">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </button>
+        </div>
         <div class="info-item">
           <span class="label">Nome:</span>
           <span class="value">{{ artist.name }}</span>
@@ -89,16 +96,32 @@
             <h3 class="album-title" [title]="album.title">{{ album.title }}</h3>
             <p class="album-artist">{{ album.artistName }}</p>
 
-            <button
-              *ngIf="hasImages(album)"
-              class="view-images-btn"
-              (click)="viewAllImages(album)"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-              </svg>
-              Ver todas as imagens
-            </button>
+            <div class="album-actions">
+              <button class="action-btn edit-btn" (click)="openEditAlbumModal(album)" title="Editar álbum">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+              </button>
+
+              <button class="action-btn upload-btn" (click)="openUploadModal(album)" title="Upload de imagens">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                Upload
+              </button>
+
+              <button
+                *ngIf="hasImages(album)"
+                class="action-btn view-btn"
+                (click)="viewAllImages(album)"
+                title="Ver todas as imagens">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                </svg>
+                Ver Imagens ({{ album.images.length }})
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -153,13 +176,39 @@
       </div>
     </div>
   </div>
-
+  <!-- Modal de Criar Álbum -->
   <app-album-form
-    *ngIf="showAlbumModal && artist"
+    *ngIf="showAlbumModal && artist && !selectedAlbum"
     [artistId]="artist.id"
     [artistName]="artist.name"
     (closeModal)="closeAlbumModal()"
     (submitForm)="onCreateAlbum($event)">
   </app-album-form>
+
+  <app-album-form
+    *ngIf="showAlbumModal && artist && selectedAlbum"
+    [albumId]="selectedAlbum.id"
+    [albumTitle]="selectedAlbum.title"
+    [artistId]="artist.id"
+    [artistName]="artist.name"
+    (closeModal)="closeAlbumModal()"
+    (submitForm)="onCreateAlbum($event)">
+  </app-album-form>
+
+  <app-artist-form
+    *ngIf="showArtistEditModal && artist"
+    [artistId]="artist.id"
+    [artistName]="artist.name"
+    (closeModal)="closeEditArtistModal()"
+    (submitForm)="onSubmitArtist($event)">
+  </app-artist-form>
+
+  <app-upload-images
+    *ngIf="showUploadModal && selectedAlbum"
+    [albumId]="selectedAlbum.id"
+    [albumTitle]="selectedAlbum.title"
+    (closeModal)="closeUploadModal()"
+    (uploadFiles)="onUploadImages($event)">
+  </app-upload-images>
 </div>
 
