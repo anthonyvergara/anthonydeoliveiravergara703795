@@ -3,6 +3,7 @@ package com.anthony.backend.controller;
 
 import com.anthony.backend.application.mapper.AlbumMapper;
 import com.anthony.backend.application.service.AlbumService;
+import com.anthony.backend.application.service.WebSocketNotificationService;
 import com.anthony.backend.controller.dto.request.AlbumCreateUpdateResponseDTO;
 import com.anthony.backend.controller.dto.request.AlbumRequestDTO;
 import com.anthony.backend.controller.dto.response.AlbumResponseDTO;
@@ -32,10 +33,12 @@ public class AlbumController extends BaseExceptionController {
 
     private final AlbumService albumService;
     private final AlbumMapper albumMapper;
+    private final WebSocketNotificationService notificationService;
 
-    public AlbumController(AlbumService albumService, AlbumMapper albumMapper) {
+    public AlbumController(AlbumService albumService, AlbumMapper albumMapper, WebSocketNotificationService notificationService) {
         this.albumService = albumService;
         this.albumMapper = albumMapper;
+        this.notificationService = notificationService;
     }
 
     @PostMapping
@@ -48,6 +51,14 @@ public class AlbumController extends BaseExceptionController {
     })
     public ResponseEntity<AlbumCreateUpdateResponseDTO> create(@Valid @RequestBody AlbumRequestDTO request) {
         Album album = albumService.create(request.getTitle(), request.getArtistId());
+
+        notificationService.notifyAlbumCreated(
+            album.getId(),
+            album.getTitle(),
+            album.getArtist().getName(),
+            album.getArtist().getId()
+        );
+
         return ResponseEntity.status(HttpStatus.CREATED).body(albumMapper.toCreateUpdateResponseDTO(album));
     }
 
