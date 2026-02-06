@@ -9,6 +9,8 @@ export interface ArtistStateData {
   currentPage: number;
   pageSize: number;
   searchTerm: string;
+  sortBy: string;
+  direction: 'ASC' | 'DESC';
   loading: boolean;
   error: string | null;
   currentArtist: Artist | null;
@@ -26,6 +28,8 @@ const initialState: ArtistStateData = {
   currentPage: 1,
   pageSize: 12,
   searchTerm: '',
+  sortBy: 'name',
+  direction: 'ASC',
   loading: false,
   error: null,
   currentArtist: null,
@@ -91,6 +95,10 @@ export class ArtistState {
 
   setSearchTerm(searchTerm: string): void {
     this.updateState({ searchTerm });
+  }
+
+  setSorting(sortBy: string, direction: 'ASC' | 'DESC'): void {
+    this.updateState({ sortBy, direction });
   }
 
   setLoading(loading: boolean): void {

@@ -51,7 +51,7 @@ export class ArtistFacade {
     this.artistState.setLoading(true);
     this.artistState.setError(null);
 
-    this.artistService.getArtists(state.searchTerm, state.currentPage, state.pageSize)
+    this.artistService.getArtists(state.searchTerm, state.currentPage, state.pageSize, state.sortBy, state.direction)
       .pipe(
         tap(response => {
           this.artistState.setArtists(response.content, response.totalElements);
@@ -68,7 +68,13 @@ export class ArtistFacade {
 
   searchArtists(searchTerm: string): void {
     this.artistState.setSearchTerm(searchTerm);
-    this.artistState.setCurrentPage(1); // Reset para página 1 ao buscar
+    this.artistState.setCurrentPage(1);
+    this.loadArtists();
+  }
+
+  setSorting(sortBy: string, direction: 'ASC' | 'DESC'): void {
+    this.artistState.setSorting(sortBy, direction);
+    this.artistState.setCurrentPage(1);
     this.loadArtists();
   }
 

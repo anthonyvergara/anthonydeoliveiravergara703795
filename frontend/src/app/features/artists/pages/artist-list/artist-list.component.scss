@@ -64,10 +64,10 @@
 }
 
 .search-section {
-  @apply mb-8;
+  @apply mb-8 flex gap-4 items-start;
 
   .search-wrapper {
-    @apply relative max-w-2xl;
+    @apply relative flex-1 max-w-2xl;
 
     .search-icon {
       @apply absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400;
@@ -86,6 +86,20 @@
     .results-count {
       @apply absolute right-4 top-1/2 transform -translate-y-1/2
              text-sm text-gray-500 font-medium;
+    }
+  }
+
+  .sort-btn {
+    @apply flex items-center gap-2 px-4 py-3 border-2 border-gray-200 rounded-xl
+           bg-white hover:bg-blue-50 transition-all duration-200
+           text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600;
+
+    &:hover {
+      @apply shadow-md;
+    }
+
+    &:active {
+      @apply scale-95;
     }
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, computed, signal, ViewChild } from '@angu
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ArtistFacade } from '../../facade/artist.facade';
 import { Artist } from '../../models/artist.model';
 import { ArtistFormComponent } from '../../components/artist-form/artist-form.component';
@@ -19,11 +19,13 @@ import { ToastService } from '../../../../shared/services/toast.service';
 export class ArtistListComponent implements OnInit, OnDestroy {
   @ViewChild(ArtistFormComponent) artistFormComponent?: ArtistFormComponent;
   private destroy$ = new Subject<void>();
+  private searchSubject$ = new Subject<string>();
 
   searchTerm = signal('');
   currentPage = signal(1);
   totalPages = signal(1);
   totalArtists = signal(0);
+  currentSort = signal<'ASC' | 'DESC'>('ASC');
   itemsPerPage = 12;
   showArtistModal = signal(false);
 
@@ -40,6 +42,17 @@ export class ArtistListComponent implements OnInit, OnDestroy {
     this.artists$ = this.artistFacade.artists$;
     this.loading$ = this.artistFacade.loading$;
     this.error$ = this.artistFacade.error$;
+
+    // Configurar debounce para busca
+    this.searchSubject$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(searchTerm => {
+        this.artistFacade.searchArtists(searchTerm);
+      });
   }
 
   ngOnInit(): void {
@@ -100,7 +113,13 @@ export class ArtistListComponent implements OnInit, OnDestroy {
   });
 
   onSearchChange(): void {
-    this.artistFacade.searchArtists(this.searchTerm());
+    this.searchSubject$.next(this.searchTerm());
+  }
+
+  toggleSort(): void {
+    const newDirection = this.currentSort() === 'ASC' ? 'DESC' : 'ASC';
+    this.currentSort.set(newDirection);
+    this.artistFacade.setSorting('name', newDirection);
   }
 
   goToPage(page: number | string): void {

@@ -27,6 +27,19 @@
         {{ totalArtists() }} {{ totalArtists() === 1 ? 'resultado' : 'resultados' }}
       </span>
     </div>
+
+    <button
+      class="sort-btn"
+      (click)="toggleSort()"
+      [title]="currentSort() === 'ASC' ? 'Ordenar de Z-A' : 'Ordenar de A-Z'">
+      <svg *ngIf="currentSort() === 'ASC'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/>
+      </svg>
+      <svg *ngIf="currentSort() === 'DESC'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/>
+      </svg>
+      <span>{{ currentSort() === 'ASC' ? 'A-Z' : 'Z-A' }}</span>
+    </button>
   </div>
 
   <div *ngIf="loading$ | async" class="loading-state">

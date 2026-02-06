@@ -33,15 +33,20 @@ export class ArtistService {
 
   constructor(private http: HttpClient) {}
 
-  getArtists(searchTerm?: string, page: number = 1, pageSize: number = 12): Observable<ArtistResponseDto> {
+  getArtists(searchTerm?: string, page: number = 1, pageSize: number = 12, sortBy: string = 'name', direction: 'ASC' | 'DESC' = 'ASC'): Observable<ArtistResponseDto> {
     const pageIndex = page - 1;
 
     let params = new HttpParams()
       .set('albums', 'false')
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
-      .set('sortBy', 'id')
-      .set('direction', 'ASC');
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+
+    // Adiciona o parâmetro 'name' se searchTerm for fornecido
+    if (searchTerm && searchTerm.trim()) {
+      params = params.set('name', searchTerm.trim());
+    }
 
     return this.http.get<ArtistResponseDto>(this.apiUrl, { params }).pipe(
       map(response => {
@@ -50,16 +55,10 @@ export class ArtistService {
           imageUrl: this.getImageForArtist(artist.id, index)
         }));
 
-        const filteredContent = searchTerm
-          ? content.filter(artist =>
-              artist.name.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-          : content;
-
         return {
           ...response,
-          content: filteredContent,
-          totalElements: searchTerm ? filteredContent.length : response.totalElements
+          content,
+          totalElements: response.totalElements
         };
       })
     );
