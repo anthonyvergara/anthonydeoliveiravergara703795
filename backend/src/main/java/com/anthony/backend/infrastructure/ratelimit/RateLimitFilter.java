@@ -31,7 +31,6 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Skip rate limiting for unauthenticated requests (public routes)
         if (authentication == null || !authentication.isAuthenticated() ||
             authentication.getPrincipal().equals("anonymousUser")) {
             filterChain.doFilter(request, response);
@@ -43,13 +42,11 @@ public class RateLimitFilter extends OncePerRequestFilter {
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
         if (probe.isConsumed()) {
-            // Add rate limit headers
             response.addHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
             response.addHeader("X-Rate-Limit-Limit", "10");
             response.addHeader("X-Rate-Limit-Reset", String.valueOf(probe.getNanosToWaitForRefill() / 1_000_000_000));
             filterChain.doFilter(request, response);
         } else {
-            // Rate limit exceeded
             long waitForRefill = probe.getNanosToWaitForRefill() / 1_000_000_000;
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
