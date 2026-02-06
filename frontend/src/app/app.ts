@@ -1,19 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, ChildrenOutletContexts } from '@angular/router';
 import { routeAnimations } from './shared/animations/route-animations';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { NotificationBellComponent } from './shared/components/notification-bell/notification-bell.component';
 import { AuthFacade } from './core/auth/facade/auth.facade';
+import { NotificationService } from './shared/services/notification.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ToastComponent],
+  imports: [CommonModule, RouterOutlet, ToastComponent, NotificationBellComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
   animations: [routeAnimations]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   activeSection = signal('home');
   isAuthenticated = signal(false);
   username = signal('');
@@ -26,11 +28,20 @@ export class AppComponent {
   constructor(
     private router: Router,
     private contexts: ChildrenOutletContexts,
-    private authFacade: AuthFacade
-  ) {
+    private authFacade: AuthFacade,
+    private notificationService: NotificationService
+  ) {}
+
+  ngOnInit(): void {
     this.authFacade.getAuthState$().subscribe(state => {
       this.isAuthenticated.set(state.isAuthenticated);
       this.username.set(state.user?.username || '');
+
+      if (state.isAuthenticated) {
+        this.notificationService.connect();
+      } else {
+        this.notificationService.disconnect();
+      }
     });
   }
 
