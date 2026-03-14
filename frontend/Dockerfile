@@ -16,7 +16,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copia o build para o Nginx
-COPY --from=build /app/dist/frontend /usr/share/nginx/html
+COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 
 # Expõe porta 80
 EXPOSE 80
